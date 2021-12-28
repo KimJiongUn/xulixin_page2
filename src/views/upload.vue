@@ -1,0 +1,80 @@
+<template>
+    <div class="container">
+        <el-upload action="" list-type="picture-card" 
+        :before-upload="beforeUpload"
+        :http-request="upload"
+        ref="upload">
+            <i slot="default" class="el-icon-plus"></i>
+            <div slot="file" slot-scope="{file}">
+                <img class="el-upload-list__item-thumbnail" :src="file.url" alt />
+                <span class="el-upload-list__item-actions">
+                    <span
+                        class="el-upload-list__item-preview"
+                        @click="handlePictureCardPreview(file)"
+                    >
+                        <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span
+                        v-if="!disabled"
+                        class="el-upload-list__item-delete"
+                        @click="handleDownload(file)"
+                    >
+                        <i class="el-icon-download"></i>
+                    </span>
+                    <span
+                        v-if="!disabled"
+                        class="el-upload-list__item-delete"
+                        @click="handleRemove(file)"
+                    >
+                        <i class="el-icon-delete"></i>
+                    </span>
+                </span>
+            </div>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt />
+        </el-dialog>
+        <el-button @click="sendToServe">点击才上传到服务器</el-button>
+    </div>
+</template>
+
+
+<script>
+export default {
+    data() {
+        return {
+            dialogImageUrl: '',
+            dialogVisible: false,
+            disabled: false,
+            fileObj:{}
+        };
+    },
+    methods: {
+        handleRemove(file) {
+            console.log(file);
+            this.$refs['upload'].handleRemove(file)
+        },
+        handlePictureCardPreview(file) {
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
+        },
+        handleDownload(file) {
+            console.log(file);
+        },
+        beforeUpload(file){
+            console.log('上传前得钩子',file)
+            if(file){
+                this.fileObj[file.name] = file
+            }
+        },
+        upload(){
+
+        },
+        sendToServe(){
+            console.log('this.fileObj',this.fileObj)
+        }
+    }
+}
+</script>
+<style lang='less' scoped>
+</style>
